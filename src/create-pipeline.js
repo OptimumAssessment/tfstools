@@ -3,47 +3,43 @@ const child_process = require('child_process');
 const path = require('path');
 const { execSync } = child_process;
 
+
+const getRepo = async(axios, name) => {
+    const result = await axios.get('/_apis/git/repositories/'+name);
+    return result.data;
+}
+
 module.exports = async( name ) => {
     const axios = await require('./login')();
     let result;
-    result = await axios.get('/_apis/policy/types?api-version=4.1').catch( (e) => {
-        console.log(e);
-    });
-    console.log(result.data);
-    return;
-    let localRepoExists; 
-    if(name === undefined) {
-        //check if this is agit repo
-        if(!fs.existsSync('.git')) {
-            console.error('Use in git repo or specify name: tfstools repo [name]');
-            process.exit(1);
-        }
 
-        const currentBranch = execSync('git rev-parse --abbrev-ref HEAD');
-        if(currentBranch !== 'master') {
-            console.log('No repo name given, can use current repo but please switch to master branch first!');
-            process.exit(1);
-        }
-        name = process.cwd().split('/').pop();
-        localRepoExists = true;
-    } else {
-        localRepoExists = false;
-    }
-    result = await axios.post('/_apis/git/repositories', {
-        name,
+    const fromName = 'AssessmentPlayer';
+    const fromRepo = await getRepo(axios, fromName);
+    const targetRepo = await getRepo(axios, name);
+
+    result = await axios.get('/_apis/build/definitions', {
+        params: {
+            repositoryType: 'TfsGit',
+            repositoryId: fromRepo.id,
+            includeAllProperties: true,
+        },
     }).catch( (e) => {
         console.log(e);
     });
 
+    const original = result.data.value[0];
 
-    if(localRepoExists) {
-        execSync('git remote add origin ' + result.data.remoteUrl);
-        execSync('git commit --allow-empty -m "initial commit"');
-        execSync('git push --set-upstream origin master');
-    } else {
-        const gitdir = path.join( process.cwd(), name)
-        execSync('git clone ' + result.data.remoteUrl);
-        execSync('git commit --allow-empty -m "initial commit"', { cwd:gitdir });
-        execSync('git push', { cwd:gitdir });
-    }
+    const clone = Object.assign({},original);
+    clone.name = targetRepo.name;
+
+    Object.assign( clone.repository, {
+        "id": targetRepo.id,
+        "name": targetRepo.name,
+        "url": targetRepo.url,
+        "defaultBranch": 'refs/heads/master',
+    });
+    await axios.post('/_apis/build/definitions', clone).catch( (e) => {
+        console.log(e);
+    });
+    console.log('Pipeline cloned');
 }
