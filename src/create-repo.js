@@ -3,14 +3,9 @@ const child_process = require('child_process');
 const path = require('path');
 const { execSync } = child_process;
 
+
 module.exports = async( name ) => {
     const axios = await require('./login')();
-    let result;
-    result = await axios.get('/_apis/policy/types?api-version=4.1').catch( (e) => {
-        console.log(e);
-    });
-    console.log(result.data);
-    return;
     let localRepoExists; 
     if(name === undefined) {
         //check if this is agit repo
@@ -19,7 +14,7 @@ module.exports = async( name ) => {
             process.exit(1);
         }
 
-        const currentBranch = execSync('git rev-parse --abbrev-ref HEAD');
+        const currentBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
         if(currentBranch !== 'master') {
             console.log('No repo name given, can use current repo but please switch to master branch first!');
             process.exit(1);
