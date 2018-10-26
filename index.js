@@ -23,10 +23,6 @@ const createPipeline = require('./src/create-pipeline');
         throw new Error('Invalid command '+command+'. Use one of: '+commandList);
     }
     func.apply(this,rest);
-
-    
-    // const axios = await require('./login')();
-    
 })();
 
 
