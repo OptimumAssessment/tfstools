@@ -13,9 +13,9 @@ To create a repository with the given name in the TeleToets TFS project, execute
 3. Run ```tfstools repo [repository name]```
 
 # Creating a build pipeline
-Most (if not all) components will share the same build pipeline. To get a copy of the correct build pipeline it has to be cloned from TFS.
+Most (if not all) Front-End components will share the same build pipeline. To get a copy of the correct build pipeline it has to be cloned from TFS.
 
-To clone a build pipeline to your repository, execute the following:
+To clone a build pipeline (using AssessmentPlayer pipeline as leading example) to your repository, execute the following:
 
 1. Open your terminal
 2. Run ```tfstools pipeline [repository name]```
@@ -23,7 +23,7 @@ To clone a build pipeline to your repository, execute the following:
 # Updating repository policies
 Creating a repository with ```tfstools repo [name]``` doesn't automatically set the policies correctly. These policies include among other things the minimum amount of reviewers.
 
-To update the repository policies to the correct ones:
+To update the repository policies to the correct ones (using TeleToets.Documentation as leading example):
 
 1. Open your terminal
 2. Run ```tfstools policy [repository name]```
