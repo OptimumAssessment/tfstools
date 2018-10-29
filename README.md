@@ -10,9 +10,9 @@ When you run tfstools for the first time you'll have to provide authentication. 
 
 When your settings are correct press 'create token' and copy the token. The token will only be visible now, if you navigate away you won't be able to see the token again. You'll have to revoke the token and generate a new one.
 
-**Note: A PAT can be used by someone to identify as you and thus should be treated as a password.**
-
 Your TFS login (3 letter code) and PAT will be stored in the file '.tfs.login'. This file is located in the users home directory. If you ever need to change your TFS login or PAT (due to it expiring/being revoked etc.) you can either edit the file or delete it and run tfstools again to be prompted to enter your new TFS login and PAT.
+
+**Note: A PAT can be used by someone to identify as you and thus should be treated as a password.**
 
 # Creating a repository
 
