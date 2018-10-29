@@ -12,6 +12,8 @@ When your settings are correct press 'create token' and copy the token. The toke
 
 **Note: A PAT can be used by someone to identify as you and thus should be treated as a password.**
 
+Your TFS login (3 letter code) and PAT will be stored in the file '.tfs.login'. This file is located in the users home directory. If you ever need to change your TFS login or PAT (due to it expiring/being revoked etc.) you can either edit the file or delete it and run tfstools again to be prompted to enter your new TFS login and PAT.
+
 # Creating a repository
 
 To create a repository with the given name in the TeleToets TFS project, execute the following:
