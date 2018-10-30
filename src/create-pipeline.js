@@ -1,11 +1,9 @@
-const fs = require('fs');
-const child_process = require('child_process');
-const path = require('path');
-const { execSync } = child_process;
-
-
 const getRepo = async(axios, name) => {
-    const result = await axios.get('/_apis/git/repositories/'+name);
+    const result = await axios.get('/_apis/git/repositories/'+name).catch((e) => {
+        console.error(`Unable to get repository ${name} from TFS`);
+        console.log(e.response.data);
+        process.exit(1);
+    });
     return result.data;
 }
 
@@ -24,7 +22,9 @@ module.exports = async( name ) => {
             includeAllProperties: true,
         },
     }).catch( (e) => {
-        console.log(e);
+        console.error('Unable to get correct build pipeline from TFS');
+        console.log(e.response.data);
+        process.exit(1);
     });
 
     const original = result.data.value[0];
@@ -39,7 +39,9 @@ module.exports = async( name ) => {
         "defaultBranch": 'refs/heads/master',
     });
     await axios.post('/_apis/build/definitions', clone).catch( (e) => {
-        console.log(e);
+        console.error('Failed to create build pipeline');
+        console.log(e.response.data);
+        process.exit(1);
     });
-    console.log('Pipeline cloned');
+    console.log('Build pipeline succesfully created');
 }

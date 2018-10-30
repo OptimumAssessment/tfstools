@@ -9,7 +9,7 @@ module.exports = async( name ) => {
     let localRepoExists; 
     let needsInitialCommit; 
     if(name === undefined) {
-        //check if this is agit repo
+        //check if this is a git repo
         if(!fs.existsSync('.git')) {
             console.error('Use in git repo or specify name: tfstools repo [name]');
             process.exit(1);
@@ -33,7 +33,9 @@ module.exports = async( name ) => {
     result = await axios.post('/_apis/git/repositories', {
         name,
     }).catch( (e) => {
-        console.log(e);
+        console.error('Failed to create repository in TFS');
+        console.log(e.response.data);
+        process.exit(1);
     });
 
 
@@ -49,4 +51,6 @@ module.exports = async( name ) => {
         execSync('git commit --allow-empty -m "initial commit"', { cwd:gitdir });
         execSync('git push', { cwd:gitdir });
     }
+
+    console.log("Git repository succesfully created");
 }
