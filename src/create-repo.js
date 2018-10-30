@@ -11,15 +11,13 @@ module.exports = async( name ) => {
     if(name === undefined) {
         //check if this is a git repo
         if(!fs.existsSync('.git')) {
-            console.error('Use in git repo or specify name: tfstools repo [name]');
-            process.exit(1);
+            throw Error('Use in git repo or specify name: tfstools repo [name]');
         }
 
 
         const gitStatus = execSync('git status').toString().trim();
         if(!gitStatus.match(/^On branch master\s/m)) {
-            console.log('No repo name given, can use current repo but please switch to master branch first!');
-            process.exit(1);
+            throw Error('No repo name given, can use current repo but please switch to master branch first!');
         }
         if(gitStatus.match(/^No commits yet$/m)) {
             needsInitialCommit = true;
@@ -32,10 +30,6 @@ module.exports = async( name ) => {
     }
     result = await axios.post('/_apis/git/repositories', {
         name,
-    }).catch( (e) => {
-        console.error('Failed to create repository in TFS');
-        console.log(e.response.data);
-        process.exit(1);
     });
 
 
@@ -51,6 +45,5 @@ module.exports = async( name ) => {
         execSync('git commit --allow-empty -m "initial commit"', { cwd:gitdir });
         execSync('git push', { cwd:gitdir });
     }
-
     console.log("Git repository succesfully created");
 }
