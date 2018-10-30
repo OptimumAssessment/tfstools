@@ -7,6 +7,7 @@ const { execSync } = child_process;
 module.exports = async( name ) => {
     const axios = await require('./login')();
     let localRepoExists; 
+    let needsInitialCommit; 
     if(name === undefined) {
         //check if this is agit repo
         if(!fs.existsSync('.git')) {
@@ -14,11 +15,16 @@ module.exports = async( name ) => {
             process.exit(1);
         }
 
-        const currentBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
-        if(currentBranch !== 'master') {
+
+        const gitStatus = execSync('git status').toString().trim();
+        if(!gitStatus.match(/^On branch master\s/m)) {
             console.log('No repo name given, can use current repo but please switch to master branch first!');
             process.exit(1);
         }
+        if(gitStatus.match(/^No commits yet$/m)) {
+            needsInitialCommit = true;
+        }
+
         name = process.cwd().split('/').pop();
         localRepoExists = true;
     } else {
@@ -33,7 +39,9 @@ module.exports = async( name ) => {
 
     if(localRepoExists) {
         execSync('git remote add origin ' + result.data.remoteUrl);
-        execSync('git commit --allow-empty -m "initial commit"');
+        if(needsInitialCommit) {
+            execSync('git commit --allow-empty -m "initial commit"');
+        }
         execSync('git push --set-upstream origin master');
     } else {
         const gitdir = path.join( process.cwd(), name)
