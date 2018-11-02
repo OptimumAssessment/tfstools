@@ -7,23 +7,27 @@ const createPipeline = require('./src/create-pipeline');
 
 
 (async() => {
-
-    if(process.argv.length < 3) {
-        throw new Error('Usage: tfstools [command]');
-    }
-    const [ , , command, ...rest ] = process.argv;
     const map = {
         'repo': createRepo,
         'policy': updateRepoPolicy,
         'pipeline': createPipeline,
     }
+    const commandList = Object.keys(map).join(', ');
+    if(process.argv.length < 3) {
+        throw Error('Invalid usage. Correct usage: tfstools [command]'+"\n"+'Use one of: '+commandList);
+    }
+    const [ , , command, ...rest ] = process.argv;
     const func = map[command];
     if(!func) {
-        const commandList = Object.keys(map).join(', ');
-        throw new Error('Invalid command '+command+'. Use one of: '+commandList);
+        throw Error('Invalid command '+command+'. Use one of: '+commandList);
     }
-    func.apply(this,rest);
-})();
-
+    return func.apply(this,rest);
+})().catch( (e) => {
+    console.log(e);
+    if(e.response) {
+        console.log(e.response.data);
+    }
+    process.exit(1);
+});
 
 

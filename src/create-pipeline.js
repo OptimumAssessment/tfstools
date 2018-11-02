@@ -1,13 +1,4 @@
-const fs = require('fs');
-const child_process = require('child_process');
-const path = require('path');
-const { execSync } = child_process;
-
-
-const getRepo = async(axios, name) => {
-    const result = await axios.get('/_apis/git/repositories/'+name);
-    return result.data;
-}
+const getRepo = async(axios, name) => (await axios.get('/_apis/git/repositories/'+name)).data;
 
 module.exports = async( name ) => {
     const axios = await require('./login')();
@@ -23,8 +14,6 @@ module.exports = async( name ) => {
             repositoryId: fromRepo.id,
             includeAllProperties: true,
         },
-    }).catch( (e) => {
-        console.log(e);
     });
 
     const original = result.data.value[0];
@@ -38,8 +27,6 @@ module.exports = async( name ) => {
         "url": targetRepo.url,
         "defaultBranch": 'refs/heads/master',
     });
-    await axios.post('/_apis/build/definitions', clone).catch( (e) => {
-        console.log(e);
-    });
-    console.log('Pipeline cloned');
+    await axios.post('/_apis/build/definitions', clone);
+    console.log('Build pipeline succesfully created');
 }
