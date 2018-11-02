@@ -4,6 +4,16 @@
 
 ```npm install -g tfstools```
 
+# First time setup (PAT)
+
+When you run tfstools for the first time you'll have to provide authentication. The authentication comes in the form of your TFS login (3 letter code) and a Personal Access Token (PAT). The 3 letter code is the same code that you use to log into your company laptop. The PAT has to be generated in TFS. To generate a PAT, navigate to [this page](https://tfs.citrus.nl/tfs/Citrus.NET/_details/security/tokens). Once you are on this page, press the 'Add' button to add a new PAT. Give your PAT a name so that you can recognize it later (for example: 'PAT tfstools'). Set the field 'expires in' to 1 year. For the scopes, select 'All scopes'.
+
+When your settings are correct press 'create token' and copy the token. The token will only be visible now, if you navigate away you won't be able to see the token again. You'll have to revoke the token and generate a new one.
+
+Your TFS login (3 letter code) and PAT will be stored in the file '.tfs.login'. This file is located in the users home directory. If you ever need to change your TFS login or PAT (due to it expiring/being revoked etc.) you can either edit the file or delete it and run tfstools again to be prompted to enter your new TFS login and PAT.
+
+**Note: A PAT can be used by someone to identify as you and thus should be treated as a password.**
+
 # Creating a repository
 
 To create a repository with the given name in the TeleToets TFS project, execute the following:
