@@ -1,4 +1,7 @@
+const assert = require('assert');
 module.exports = async( name ) => {
+    assert( name !== undefined );
+
     const axios = await require('./login')();
     let result;
 
