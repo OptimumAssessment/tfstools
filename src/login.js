@@ -11,7 +11,7 @@ module.exports = async() => {
     let login = {};
     if(!fs.existsSync(dotPath)) {
         login.username = await promptly.prompt('TFS user name? (3 letters)');
-        login.pat = await promptly.prompt('TFS PAT? (https://tfs.citrus.nl/tfs/Citrus.NET/TeleToets/_git/tfstools?path=%2FREADME.md&version=GBmaster)');
+        login.pat = await promptly.prompt('TFS PAT? (https://tfs.citrus.nl/tfs/Citrus.NET/Optimum/_git/tfstools?path=%2FREADME.md&version=GBmaster)');
 
         fs.writeFile(dotPath, JSON.stringify(login), ()=> { });
     } else {
@@ -21,6 +21,6 @@ module.exports = async() => {
     axios.defaults.params = {
         'api-version': '4.0',
     };
-    axios.defaults.baseURL = 'https://'+basicAuth+'@tfs.citrus.nl/tfs/Citrus.NET/TeleToets';
+    axios.defaults.baseURL = 'https://'+basicAuth+'@tfs.citrus.nl/tfs/Citrus.NET/Optimum';
     return axios;
 }
