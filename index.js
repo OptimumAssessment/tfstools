@@ -4,6 +4,7 @@
 const createRepo = require('./src/create-repo');
 const updateRepoPolicy = require('./src/update-repo-policy.js');
 const createPipeline = require('./src/create-pipeline');
+const createPullRequest = require('./src/create-pull-request.js');
 
 
 (async() => {
@@ -11,6 +12,7 @@ const createPipeline = require('./src/create-pipeline');
         'repo': createRepo,
         'policy': updateRepoPolicy,
         'pipeline': createPipeline,
+        'pr': createPullRequest,
     }
     const commandList = Object.keys(map).join(', ');
     if(process.argv.length < 3) {

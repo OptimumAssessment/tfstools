@@ -1,6 +1,8 @@
 const getRepo = async(axios, name) => (await axios.get('/_apis/git/repositories/'+name)).data;
+const assert = require('assert');
 
 module.exports = async( name ) => {
+    assert( name !== undefined );
     const axios = await require('./login')();
     let result;
 
