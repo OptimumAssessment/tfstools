@@ -22,15 +22,17 @@ module.exports = async() => {
     assert(branch != 'master');
 
 
-    let gitVersionLocation = which.sync('gitversion');
-
-    const versionResult = child_process.spawnSync(gitVersionLocation);
-    const semver = JSON.parse(versionResult.stdout).FullSemVer;
-    const prefix = 'https://cafe.citrusandriessen.nl/#';
-    const url = [ prefix, repo, 'v'+semver ].join('/');
-    
     const title = 'Merge '+branch+' to master';
-    const description = 'Demo at: ' + url;
+    let description = title;
+
+    if(process.argv.indexOf('demo') !== -1) {
+        let gitVersionLocation = which.sync('gitversion');
+        const versionResult = child_process.spawnSync(gitVersionLocation);
+        const semver = JSON.parse(versionResult.stdout).FullSemVer;
+        const prefix = 'https://cafe.citrusandriessen.nl/#';
+        const url = [ prefix, repo, 'v'+semver ].join('/');
+        description = 'Demo at: ' + url;
+    }
 
     result = await axios.post('/_apis/git/repositories/'+repositoryId+'/pullrequests', {
         sourceRefName:'refs/heads/'+branch,
