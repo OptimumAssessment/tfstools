@@ -29,6 +29,29 @@ module.exports = async( name ) => {
         "url": targetRepo.url,
         "defaultBranch": 'refs/heads/master',
     });
-    await axios.post('/_apis/build/definitions', clone);
-    console.log('Build pipeline succesfully created');
+    axios.post('/_apis/build/definitions', clone).then( ()=> {
+        console.log('Build pipeline succesfully created');
+    }).catch( async(e) => {
+        if(e.response.data.message.indexOf('already exists') !== -1) {
+            //update existing definition
+            result = await axios.get('/_apis/build/definitions', {
+                params: {
+                    repositoryType: 'TfsGit',
+                    repositoryId: targetRepo.id,
+                    includeAllProperties: true,
+                },
+            });
+
+            const existing = result.data.value[0];
+            clone.id = existing.id;
+            clone.revision = existing.revision;
+            axios.put('/_apis/build/definitions/'+clone.id, clone).then( ()=> {
+                console.log('Build pipeline succesfully updated');
+            }).catch( (e) => {
+                console.log(e);
+            });
+        } else {
+            console.log(e);
+        }
+    });
 }
