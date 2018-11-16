@@ -1,14 +1,12 @@
-const path = require('path');
+const syncvars = require('../src/syncvars');
+const unsyncvars = require('../src/unsyncvars');
 const GitRepo = require('./GitRepo');
-
-const tfstoolsPath = path.join(__dirname,'../index.js');
-let syncvarsCommand = `node ${tfstoolsPath} syncvars Front-End`; // i.e "tfstools syncvars Front-End"
-let unsyncvarsCommand = `node ${tfstoolsPath} unsyncvars`; // i.e "tfstools unsyncvars"
 
 let gitRepo;
 beforeEach( async()=> {
     gitRepo = new GitRepo();
     await gitRepo.create();
+    process.chdir( gitRepo.path );
 });
 afterEach( async()=> {
     await gitRepo.destroy();
@@ -21,7 +19,7 @@ describe('Given a repo with var-injectable files', () => {
             'config.xml': '<key>storage</key><value>__az.storage.name__</value>',
         });
         
-        await gitRepo.shell(syncvarsCommand);
+        await syncvars('Front-End');
         const contents = await gitRepo.contents('config.xml');
 
         //variable should be replaced with a value (for example not having the __ anymore)
@@ -34,7 +32,7 @@ describe('Given a repo with var-injectable files', () => {
         });
 
         const shell = gitRepo.shell;
-        await shell(syncvarsCommand);
+        await syncvars('Front-End');
 
         //create bare repo to receive push
         const pushTarget = new GitRepo();
@@ -44,10 +42,10 @@ describe('Given a repo with var-injectable files', () => {
         //expect push to fail
         await expect(shell('git push origin master')).rejects.toThrow();
 
-        await shell(unsyncvarsCommand);
-
-        //expect push to succeed
+        //after unsyncvars, expect push to succeed
+        await unsyncvars();
         await shell('git push origin master');
+
         await pushTarget.destroy()
     });
 
@@ -58,7 +56,7 @@ describe('Given a repo with var-injectable files', () => {
             'index.js': 'console.log(1)',
         });
         const shell = gitRepo.shell;
-        await shell(syncvarsCommand);
+        await syncvars('Front-End');
 
         //var is synced, index.js is intact
         await expect( gitRepo.contents('config.xml') ).resolves.toMatch(/<key>storage<\/key><value>[a-z0-9]+<\/value>/);
@@ -70,7 +68,7 @@ describe('Given a repo with var-injectable files', () => {
         await expect( gitRepo.contents('index.js') ).resolves.toBe('console.log(2)');
 
         //undo the variable sync
-        await shell(unsyncvarsCommand);
+        await unsyncvars();
 
         //var is unsynced, index.js is intact
         await expect( gitRepo.contents('config.xml') ).resolves.toBe('<key>storage</key><value>__az.storage.name__</value>');

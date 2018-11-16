@@ -4,12 +4,8 @@ const fs = require('fs');
 const child_process = require('child_process');
 const rimraf = require('rimraf');
 
-const workdirShell = (cwd) => (cmd) => new Promise((ok,fail) => {
-    child_process.exec(cmd, { cwd }, (e,out,err) => {
-        e ? fail(e) : ok({out, err});
-    });
-});
 module.exports = class GitRepo {
+    //creates a new git repo in a tmp dir
     create(bare = false) {
         return new Promise((ok,fail) => {
             tmp.dir( async(err, path, cleanupCallback) => {
@@ -25,15 +21,18 @@ module.exports = class GitRepo {
         return new Promise(ok => rimraf(this.path, ok));
     }
 
-    contents(file) {
+    //returns the contents of filename, local to this repo
+    contents(filename) {
         return new Promise((ok,fail) => {
-            const abs = path.join(this.path, file);
+            const abs = path.join(this.path, filename);
             fs.readFile( abs, (e,cnt) => {
                 e ? fail(e) : ok(cnt.toString());
             });
         });
     }
 
+    // creates a commit
+    // files is a map with entries filename: 'contents'
     commit(message, files) {
         const base = this.path;
         const shell = this.shell;
@@ -53,6 +52,9 @@ module.exports = class GitRepo {
 
         });
     }
+
+    // shell executes a command in the git repo dir
+    // logShell executes a command in the git repo dir and logs about it
     async logShell(cmd) {
         console.log(cmd);
         const { out, err } = await gitRepo.shell(cmd);
@@ -60,3 +62,10 @@ module.exports = class GitRepo {
         console.log(err);
     }
 };
+
+// returns a shell method that executes in the provided working directory
+const workdirShell = (cwd) => (cmd) => new Promise((ok,fail) => {
+    child_process.exec(cmd, { cwd }, (e,out,err) => {
+        e ? fail(e) : ok({out, err});
+    });
+});
