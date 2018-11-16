@@ -27,7 +27,7 @@ module.exports = async( varGroupName ) => {
             console.log('created and tagged commit.');
         }
     } catch(e) {
-        console.log(e);
+        console.log( chalk.red(e.message) );
     }
 }
 
