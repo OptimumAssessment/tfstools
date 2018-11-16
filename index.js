@@ -1,18 +1,15 @@
 #!/usr/bin/env node
 
 
-const createRepo = require('./src/create-repo');
-const updateRepoPolicy = require('./src/update-repo-policy.js');
-const createPipeline = require('./src/create-pipeline');
-const createPullRequest = require('./src/create-pull-request.js');
-
 
 (async() => {
     const map = {
-        'repo': createRepo,
-        'policy': updateRepoPolicy,
-        'pipeline': createPipeline,
-        'pr': createPullRequest,
+        'repo': require('./src/create-repo'),
+        'policy': require('./src/update-repo-policy.js'),
+        'pipeline': require('./src/create-pipeline'),
+        'pr': require('./src/create-pull-request.js'),
+        'syncvars': require('./src/syncvars'),
+        'unsyncvars': require('./src/unsyncvars'),
     }
     const commandList = Object.keys(map).join(', ');
     if(process.argv.length < 3) {
