@@ -60,3 +60,10 @@ To fill __VARIABLE__ placeholders with values of a variable group in TFS
 
 There will be a large number of components that each have a repository but should have one build pipeline. This is however not possible within TFS. Due to this restriction this tool has been created to automate the process of creating a repository and cloning the build pipeline and it's policies. This will aid in the development process by preventing time loss and incorrect build pipelines due to human error. When using tfstools you will have a correctly set-up repository with a correct build-pipeline including the policies and triggers that belong to this repository and pipeline.
 
+# Test
+
+1. ```npm install```
+2. ```jest```
+
+
+
