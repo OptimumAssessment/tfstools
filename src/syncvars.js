@@ -28,6 +28,7 @@ module.exports = async( varGroupName ) => {
         }
     } catch(e) {
         console.log( chalk.red(e.message) );
+        process.exit(1);
     }
 }
 
