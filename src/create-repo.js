@@ -2,7 +2,7 @@ const fs = require('fs');
 const child_process = require('child_process');
 const login = require('./login');
 
-const getRepoName = require('get-repo-name');
+const getRepoName = require('./get-repo-name');
 const { execSync } = child_process;
 
 module.exports = async( name ) => {
@@ -16,12 +16,12 @@ module.exports = async( name ) => {
     if(gitStatus.match(/^No commits yet$/m)) {
         throw Error('Please make an initial commit first');
     }
-    name = getRepoName(name);
+    name = await getRepoName(name);
 
     const axios = await login();
     result = await axios.post('/_apis/git/repositories', { name });
 
     execSync('git remote add origin ' + result.data.remoteUrl);
     execSync('git push --set-upstream origin master');
-    console.log("Git repository succesfully created');
+    console.log('Git repository succesfully created');
 }

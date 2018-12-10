@@ -1,8 +1,8 @@
 const getRepo = async(axios, name) => (await axios.get('/_apis/git/repositories/'+name)).data;
-const assert = require('assert');
+const getRepoName = require('./get-repo-name');
 
 module.exports = async( name ) => {
-    assert( name !== undefined );
+    name = await getRepoName(name);
     const axios = await require('./login')();
     let result;
 
@@ -19,7 +19,6 @@ module.exports = async( name ) => {
     });
 
     const original = result.data.value[0];
-
     const clone = Object.assign({},original);
     clone.name = targetRepo.name;
 
