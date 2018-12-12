@@ -7,7 +7,6 @@ const which = require('which');
 
 module.exports = async() => {
     const axios = await require('./login')();
-
     const repo = process.cwd().split(path.sep).pop();
 
     let result;
@@ -34,6 +33,10 @@ module.exports = async() => {
         description = 'Demo at: ' + url;
     }
 
+    const workItemId = branch.match(/[0-9]+/)[0];
+    const workItemUrl = (await axios.get('_apis/wit/workitems?ids='+workItemId)).data.value[0].url;
+    const workItem = { id:workItemId, url:workItemUrl };
+
     result = await axios.post('/_apis/git/repositories/'+repositoryId+'/pullrequests', {
         sourceRefName:'refs/heads/'+branch,
         targetRefName:'refs/heads/master',
@@ -43,7 +46,8 @@ module.exports = async() => {
             {
                 id: '98402fb7-28d3-4c35-8dcf-61124d96ec2b',
             }
-        ]
+        ],
+        workItemRefs: [ workItem ],
     }).catch( (e) => {
         console.log(e.response.data);
     });
