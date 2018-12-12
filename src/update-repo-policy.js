@@ -1,6 +1,7 @@
-const assert = require('assert');
+const getRepoName = require('./get-repo-name');
+
 module.exports = async( name ) => {
-    assert( name !== undefined );
+    name = await getRepoName(name);
 
     const axios = await require('./login')();
     let result;
