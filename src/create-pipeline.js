@@ -54,3 +54,4 @@ module.exports = async( name ) => {
         }
     });
 }
+module.exports.tip = 'creates or updates corresponding build pipeline to match AssessmentPlayer build pipeline';

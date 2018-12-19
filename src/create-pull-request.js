@@ -54,4 +54,4 @@ module.exports = async() => {
     console.log(result.data);
 }
 
-
+module.exports.tip = 'creates a pull request for the current branch. (add "demo" to include component library link)';

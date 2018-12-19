@@ -130,3 +130,4 @@ fi
         console.log('pre push hook installed');
     });
 }
+module.exports.tip = 'replaces placeholders with values from TFS vargroup';

@@ -23,4 +23,4 @@ module.exports = async( name ) => {
     console.log("Policies have been set correctly");
 }
 
-
+module.exports.tip = 'sets the remote master branch policy to match those in Optimum.Documentation';

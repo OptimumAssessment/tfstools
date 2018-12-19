@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-
-
+const chalk = require('chalk');
 (async() => {
     const map = {
         'repo': require('./src/create-repo'),
@@ -13,7 +12,8 @@
     }
     const commandList = Object.keys(map).join(', ');
     if(process.argv.length < 3) {
-        throw Error('Invalid usage. Correct usage: tfstools [command]'+"\n"+'Use one of: '+commandList);
+        renderHelp(map);
+        process.exit(1);
     }
     const [ , , command, ...rest ] = process.argv;
     const func = map[command];
@@ -30,3 +30,16 @@
 });
 
 
+function renderHelp(map) {
+    const perCommandHelp = [];
+    for(var i in map) {
+        perCommandHelp.push( "    " + chalk.green('tfstools '+i).padEnd(30) + map[i].tip);
+    }
+console.log(`
+    tfstools connects to the TFS REST api, to give you some helpful commands.
+    Commands expect to be run in a local git repository.
+
+${perCommandHelp.join("\n")}
+
+`);
+}

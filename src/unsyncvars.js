@@ -7,3 +7,4 @@ module.exports = async() => {
         console.error('unsyncvars failed: ',e);
     }
 }
+module.exports.tip = 'undo a previous synvars command';
