@@ -4,6 +4,7 @@ const { execSync } = child_process;
 
 const assert = require('assert');
 const which = require('which');
+const demoUrl = require('./demo-url');
 
 module.exports = async() => {
     const axios = await require('./login')();
@@ -26,11 +27,10 @@ module.exports = async() => {
 
     if(process.argv.indexOf('demo') !== -1) {
         let gitVersionLocation = which.sync('gitversion');
-        const versionResult = child_process.spawnSync(gitVersionLocation);
-        const semver = JSON.parse(versionResult.stdout).FullSemVer;
-        const prefix = 'https://cafe.citrusandriessen.nl/#';
-        const url = [ prefix, repo, 'v'+semver ].join('/');
-        description = 'Demo at: ' + url;
+        const semver = JSON.parse(
+            child_process.spawnSync(gitVersionLocation).stdout
+        ).FullSemVer;
+        description = 'Demo at: ' + demoUrl(repo, semver);
     }
 
     const workItemId = branch.match(/[0-9]+/)[0];
