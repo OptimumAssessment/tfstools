@@ -25,3 +25,5 @@ module.exports = async( name ) => {
     execSync('git push --set-upstream origin master');
     console.log('Git repository succesfully created');
 }
+
+module.exports.tip = 'creates and connects the corresponding TFS remote repo';
