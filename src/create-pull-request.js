@@ -42,6 +42,11 @@ module.exports = async() => {
         targetRefName:'refs/heads/master',
         title,
         description,
+        completionOptions: {
+            deleteSourceBranch: true,
+            transitionWorkItems: true,
+
+        },
         reviewers: [
             {
                 id: '98402fb7-28d3-4c35-8dcf-61124d96ec2b',
