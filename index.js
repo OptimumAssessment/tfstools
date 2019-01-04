@@ -7,8 +7,6 @@ const chalk = require('chalk');
         'policy': require('./src/update-repo-policy.js'),
         'pipeline': require('./src/create-pipeline'),
         'pr': require('./src/create-pull-request.js'),
-        'syncvars': require('./src/syncvars'),
-        'unsyncvars': require('./src/unsyncvars'),
     }
     const commandList = Object.keys(map).join(', ');
     if(process.argv.length < 3) {

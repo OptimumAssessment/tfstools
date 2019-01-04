@@ -46,24 +46,6 @@ To create a pull request for the current feature branch.
 2. Go to the directory of the git repo, with the correct feature branch selected
 3. Run ```tfstools pr```
 
-# Sync tfs vars
-
-To fill __VARIABLE__ placeholders with values of a variable group in TFS
-1. Open your terminal
-2. Go to the directory of the git repo
-3. Run ```tfstools syncvars [vargroup name]```
-4. Work with the synchronized values
-5. Before pushing to remote, a pre-push hook "forces" you to ```tfstools unsyncvars``` first
-
-
 # Why
 
 There will be a large number of components that each have a repository but should have one build pipeline. This is however not possible within TFS. Due to this restriction this tool has been created to automate the process of creating a repository and cloning the build pipeline and it's policies. This will aid in the development process by preventing time loss and incorrect build pipelines due to human error. When using tfstools you will have a correctly set-up repository with a correct build-pipeline including the policies and triggers that belong to this repository and pipeline.
-
-# Test
-
-1. ```npm install```
-2. ```jest```
-
-
-
