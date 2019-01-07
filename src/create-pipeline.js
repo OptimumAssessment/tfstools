@@ -30,10 +30,10 @@ module.exports = async( name ) => {
     const clone = Object.assign({},original);
     clone.name = targetRepo.name;
     Object.assign( clone.repository, {
-        "id": targetRepo.id,
-        "name": targetRepo.name,
-        "url": targetRepo.url,
-        "defaultBranch": 'refs/heads/master',
+        id: targetRepo.id,
+        name: targetRepo.name,
+        url: targetRepo.url,
+        defaultBranch: 'refs/heads/master',
     });
     axios.post('/_apis/build/definitions', clone).then( ()=> {
         console.log('Build pipeline succesfully created');
