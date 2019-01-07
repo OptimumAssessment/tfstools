@@ -1,5 +1,7 @@
 ## Tfstools
 
+# WARNING: moving to github in progress...
+
 # Install
 
 ```npm install -g tfstools```
