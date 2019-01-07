@@ -4,7 +4,6 @@ const { execSync } = child_process;
 
 const assert = require('assert');
 const which = require('which');
-const demoUrl = require('./demo-url');
 
 module.exports = async() => {
     const axios = await require('./login')();
@@ -24,19 +23,13 @@ module.exports = async() => {
 
     const title = 'Merge '+branch+' to master';
     let description = title;
-
-    if(process.argv.indexOf('demo') !== -1) {
-        let gitVersionLocation = which.sync('gitversion');
-        const semver = JSON.parse(
-            child_process.spawnSync(gitVersionLocation).stdout
-        ).FullSemVer;
-        description = 'Demo at: ' + demoUrl(repo, semver);
+    if(process.argv.length > 3) {
+        description = process.argv[3];
     }
 
     const workItemId = branch.match(/[0-9]+/)[0];
     const workItemUrl = (await axios.get('_apis/wit/workitems?ids='+workItemId)).data.value[0].url;
     const workItem = { id:workItemId, url:workItemUrl };
-
     result = await axios.post('/_apis/git/repositories/'+repositoryId+'/pullrequests', {
         sourceRefName:'refs/heads/'+branch,
         targetRefName:'refs/heads/master',
