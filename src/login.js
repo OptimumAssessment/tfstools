@@ -5,13 +5,13 @@ const promptly = require('promptly');
 const os = require('os');
 const axios = require('axios');
 
-module.exports = async() => {
+module.exports = async(force) => {
     const dotPath = path.join(os.homedir(), '.tfs-login');
 
     let login = {};
-    if(!fs.existsSync(dotPath)) {
+    if(force || !fs.existsSync(dotPath)) {
         login.username = await promptly.prompt('TFS user name? (3 letters)');
-        login.pat = await promptly.prompt('TFS PAT? (https://tfs.citrus.nl/tfs/Citrus.NET/Optimum/_git/tfstools?path=%2FREADME.md&version=GBmaster)');
+        login.pat = await promptly.prompt('TFS PAT? (In TFS, navigate to security at the profile menu)');
 
         fs.writeFile(dotPath, JSON.stringify(login), ()=> { });
     } else {
