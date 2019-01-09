@@ -3,6 +3,7 @@
 const chalk = require('chalk');
 (async() => {
     const map = {
+        'login': require('./src/login-command'),
         'repo': require('./src/create-repo'),
         'policy': require('./src/update-repo-policy.js'),
         'pipeline': require('./src/create-pipeline'),
