@@ -5,22 +5,24 @@ const promptly = require('promptly');
 const os = require('os');
 const axios = require('axios');
 
-module.exports = async(force) => {
+module.exports = async() => {
     const dotPath = path.join(os.homedir(), '.tfs-login');
-
-    let login = {};
-    if(force || !fs.existsSync(dotPath)) {
-        login.username = await promptly.prompt('TFS user name? (3 letters)');
-        login.pat = await promptly.prompt('TFS PAT? (In TFS, navigate to security at the profile menu)');
-
-        fs.writeFile(dotPath, JSON.stringify(login), ()=> { });
-    } else {
-        login = JSON.parse( fs.readFileSync(dotPath) );
+    let settings;
+    try {
+        settings = JSON.parse( fs.readFileSync(dotPath) );
+        if(!settings.tfsurl) {
+            throw new Error('no.tfsurl');
+        }
+    } catch(e) {
+        console.log(`please run 'tfstools setup' first`);
+        process.exit(1);
     }
-    const basicAuth = login.username+':'+login.pat;
+
+    const { username, pat, tfsurl } = settings;
+    const basicAuth = username+':'+pat;
     axios.defaults.params = {
         'api-version': '4.0',
     };
-    axios.defaults.baseURL = 'https://'+basicAuth+'@tfs.citrus.nl/tfs/Citrus.NET/Optimum';
+    axios.defaults.baseURL = tfsurl.replace('//', '//'+basicAuth+'@');
     return axios;
 }
