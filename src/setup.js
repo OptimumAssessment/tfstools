@@ -24,6 +24,4 @@ module.exports = async() => {
 
     fs.writeFileSync(dotPath, JSON.stringify(setup));
     console.log('setup complete');
-
-    // axios.defaults.baseURL = 'https://'+basicAuth+'@tfs.citrus.nl/tfs/Citrus.NET/Optimum';
 }
