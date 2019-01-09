@@ -28,7 +28,7 @@ module.exports = async() => {
     }
 
     const workItemId = branch.match(/[0-9]+/)[0];
-    const workItemUrl = (await axios.get('_apis/wit/workitems?ids='+workItemId)).data.value[0].url;
+    const workItemUrl = (await axios.get('/_apis/wit/workitems?ids='+workItemId)).data.value[0].url;
     const workItem = { id:workItemId, url:workItemUrl };
     result = await axios.post('/_apis/git/repositories/'+repositoryId+'/pullrequests', {
         sourceRefName:'refs/heads/'+branch,
