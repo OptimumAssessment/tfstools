@@ -5,9 +5,17 @@ const { execSync } = child_process;
 const assert = require('assert');
 const which = require('which');
 
+const reviewers = [
+    'eb42e8e4-110e-46c4-96a5-64d3fb3b9727', //mike
+    'f995a367-b97b-4033-880d-127fc8bdbd0f', //jorrit verstijlen
+    '4ba998fe-07fb-4697-8e41-fc8575b6cc07', //roeland
+].map(id => ({id}));
+
 module.exports = async() => {
     const axios = await require('./login')();
     const repo = process.cwd().split(path.sep).pop();
+
+
 
     let result;
     result = await axios.get('/_apis/git/repositories/'+repo);
@@ -27,9 +35,17 @@ module.exports = async() => {
         description = process.argv[3];
     }
 
-    const workItemId = branch.match(/[0-9]+/)[0];
-    const workItemUrl = (await axios.get('/_apis/wit/workitems?ids='+workItemId)).data.value[0].url;
-    const workItem = { id:workItemId, url:workItemUrl };
+    let workItemRefs = [];
+
+    try {
+        const workItemId = branch.match(/[0-9]+/)[0];
+        const workItemUrl = (await axios.get('/_apis/wit/workitems?ids='+workItemId)).data.value[0].url;
+        const workItem = { id:workItemId, url:workItemUrl };
+        workItemRefs.push(workItem);
+    } catch(e) {
+        //no linked work item
+        console.log(e);
+    }
     result = await axios.post('/_apis/git/repositories/'+repositoryId+'/pullrequests', {
         sourceRefName:'refs/heads/'+branch,
         targetRefName:'refs/heads/master',
@@ -38,14 +54,8 @@ module.exports = async() => {
         completionOptions: {
             deleteSourceBranch: true,
             transitionWorkItems: true,
-
         },
-        reviewers: [
-            {
-                id: '98402fb7-28d3-4c35-8dcf-61124d96ec2b',
-            }
-        ],
-        workItemRefs: [ workItem ],
+        workItemRefs,
     }).catch( (e) => {
         console.log(e.response.data);
     });

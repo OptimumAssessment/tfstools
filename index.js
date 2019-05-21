@@ -8,6 +8,7 @@ const chalk = require('chalk');
         'policy': require('./src/update-repo-policy.js'),
         'pipeline': require('./src/create-pipeline'),
         'pr': require('./src/create-pull-request.js'),
+        'prs': require('./src/pull-requests.js'),
     }
     const commandList = Object.keys(map).join(', ');
     if(process.argv.length < 3) {
