@@ -3,6 +3,10 @@ module.exports = async() => {
     const axios = await require('./login')();
 
     const list = (await axios.get('/_apis/git/pullrequests')).data.value;
+    if (list.length === 0) {
+        console.log('No open pull requests.');
+        process.exit(0);
+    }
 
     list.forEach((pr,i) => {
         const values = [
