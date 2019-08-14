@@ -13,7 +13,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "axios": "^0.18.0",
+        "axios": "^0.19.0",
         "chalk": "^2.4.1",
         "dotenv": "^6.1.0",
         "find": "^0.2.9",
